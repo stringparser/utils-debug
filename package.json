@@ -11,7 +11,8 @@
     "stdout",
     "debug",
     "simple",
-    "utils"
+    "utils",
+    "wee"
   ],
   "author": {
     "name": "Javier Carrillo"

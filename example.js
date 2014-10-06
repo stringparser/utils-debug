@@ -1,9 +1,11 @@
-var debug = require('./.').enable();
+'use strict';
+
+require('./.').enable();
 
 console.log('hello!');
 
-origin();
+someMethod();
 
-function origin(){
+function someMethod(){
   console.log('what up!');
 }

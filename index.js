@@ -5,21 +5,23 @@ var callers = require('v8-callsites');
 var monkey = require('stdout-monkey')();
 var ws = require('fs').createWriteStream('log');
 
+var DEBUG = (process.env.DEBUG || '').trim().split(',');
+
+var batch = { }, registry = { };
 var wd = process.cwd();
-var registry = { };
 
-var batch = { };
-function spy(line){
+function stdout(line){
   var frame = callers(console.log)[0];
-
   var file = path.relative(wd, frame.getFileName()) || './.';
-  if( registry[file] === void 0 ){
+
+  if( !registry[file] ){
     monkey.write(line);
+    return ;
+  } else if (!DEBUG || DEBUG.indexOf(file.replace(path.extname(file), '')) < 0){
     return ;
   }
 
-  frame = (' at '+frame+'').replace(wd, '.')+'\n';
-
+  frame = ('at '+frame+'').replace(wd+path.sep, '')+'\n';
   batch.file = batch.file || file;
   batch.frame = batch.frame || frame;
 
@@ -28,34 +30,35 @@ function spy(line){
     delete batch.timer;
   }
 
-  if( batch.frame !== frame ){
-    monkey.write(batch.frame);
+  if( batch.file !== file ){
     monkey.write(batch.data.join(''));
+    frame = ('at '+frame+'').replace(wd+path.sep, '')+'\n';
     batch = {
        file : file,
       frame : frame
     };
   }
 
-  batch.data = batch.data || [];
-  if( batch.data.indexOf(frame) < -1 ){
+  batch.data = batch.data || [ ];
+  if( batch.data.indexOf(frame) < 0 ){
     batch.data.push(frame);
   }
-  batch.data.push('  '+line);
-
-  ws.write('waiting...\n'+ JSON.stringify(batch, null, ' ')+'\n');
+  batch.data.push(line);
 
   batch.timer = setTimeout(function(){
     if(batch.data){
-      monkey.write(batch.frame);
       monkey.write(batch.data.join(''));
-      delete batch.timer;
-      ws.write('timer kicks\n'+ JSON.stringify(batch, null, ' ')+'\n');
       batch = { };
     }
   });
 }
-monkey.patch(spy);
+monkey.patch(stdout);
+
+process.on('exit', function(){
+  if(batch.data){
+    monkey.write(batch.data.join(''));
+  }
+});
 
 function enable(){
   var file = callers(enable)[0].getFileName();

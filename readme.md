@@ -3,18 +3,14 @@
 [<img alt="build" src="http://img.shields.io/travis/stringparser/utils-debug/master.svg?style=flat-square" align="left"/>](https://travis-ci.org/stringparser/utils-debug/builds)
 [<img alt="NPM version" src="http://img.shields.io/npm/v/utils-debug.svg?style=flat-square" align="right"/>](http://www.npmjs.org/package/utils-debug)
 
-wee, unintrusive debugging
-
-## install
-
-    npm install --save utils-debug
+simple debug utility
 
 ## example
 
 ```js
 'use strict';
 
-var debug = require('./.').enable();
+require('utils-debug').enable();
 
 console.log('hello');
 
@@ -35,6 +31,13 @@ at someMethod (example.js:10:11)
 what up!
 ```
 
+but without any other function
+
+## install
+
+    npm install --save utils-debug
+
+
 ### documentation
 
 ```js
@@ -45,18 +48,18 @@ Thats basically *it*.
 
 All `console.log`s of that file will not print to `stdout` if there is no **DEBUG** environment variable set. 
 
-With that, just run it as you usually do with [debug](https://github.com/visionmedia/debug) but instead of using some label you wrote on the source code of some file, **use the path of the file** relative to the project. That is if you project looks like below
+If there is a **DEBUG** environment variable, just run it as you usually do with [debug](https://github.com/visionmedia/debug) but instead of using some label you wrote on the source code of some file **use the path of the file** relative to the project. That is, if you project looks like below
 
 ```
 project-dir
- |-- lib
-     |--> code.js
- |-- test
-     |--> code.js
- |-- index.js
+ |-lib
+   |--> code.js
+ |-index.js
 ```
 
-and want to debug `lib/code.js`
+and want to debug `lib/code.js` go ahead and write `DEBUG=lib/code node index.js`. 
+
+Yes, the extension is not necessary.
 
 ## why
 
@@ -65,6 +68,7 @@ You want expressive, unintrusive debugging.
 ## todo
 
  - [ ] make some tests
+ - [ ] be able to turn on debugging projectwise
  - [ ] be able to format the output as much as one likes
  - [ ] sorten debugging paths for `node_modules` directory
 

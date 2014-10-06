@@ -1,7 +1,7 @@
 {
   "name": "utils-debug",
   "version": "0.5.0",
-  "description": "wee debug utility",
+  "description": "unintrusive debug utility",
   "main": "index.js",
   "engines": {
     "node": ">= 0.9.0"
@@ -12,7 +12,8 @@
     "debug",
     "simple",
     "utils",
-    "wee"
+    "wee",
+    "unintrusive"
   ],
   "author": {
     "name": "Javier Carrillo"

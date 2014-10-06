@@ -31,7 +31,7 @@ at someMethod (example.js:10:11)
 what up!
 ```
 
-but without any other function, plain `console.log`
+but without any other function, just plain `console.log`s
 
 ## install
 

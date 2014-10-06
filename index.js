@@ -1,50 +1,40 @@
 'use strict';
 
-var path = require('path');
-var callers = require('v8-callsites');
+var merge = require('lodash.merge');
+var site = require('v8-callsites');
 var monkey = require('stdout-monkey')();
-var ws = require('fs').createWriteStream('log');
 
-var DEBUG = (process.env.DEBUG || '').trim().split(',');
-
-var batch = { }, registry = { };
-var wd = process.cwd();
+var batch = { };
+var util = require('./lib/utils');
 
 function stdout(line){
-  var frame = callers(console.log)[0];
-  var file = path.relative(wd, frame.getFileName()) || './.';
 
-  if( !registry[file] ){
-    monkey.write(line);
-    return ;
-  } else if (!DEBUG || DEBUG.indexOf(file.replace(path.extname(file), '')) < 0){
+  var frame = site(console.log)[0];
+  var file = util.relative(frame.getFileName());
+
+  if( util.skip(file, monkey, line) ){
     return ;
   }
 
-  frame = ('at '+frame+'').replace(wd+path.sep, '')+'\n';
+  var shot = util.relative('at '+frame) + '\n';
+  batch.data = batch.data || [shot];
   batch.file = batch.file || file;
-  batch.frame = batch.frame || frame;
+  batch.shot = batch.shot || shot;
 
-  if( batch.timer ){
-    clearTimeout(batch.timer);
-    delete batch.timer;
+  if( util.regexpOf(batch.data, shot, monkey) < 0 ){
+      batch.data.push(shot);
   }
 
   if( batch.file !== file ){
     monkey.write(batch.data.join(''));
-    frame = ('at '+frame+'').replace(wd+path.sep, '')+'\n';
-    batch = {
-       file : file,
-      frame : frame
-    };
+    batch = { file : file, shot : shot };
+    return ;
   }
 
-  batch.data = batch.data || [ ];
-  if( batch.data.indexOf(frame) < 0 ){
-    batch.data.push(frame);
-  }
   batch.data.push(line);
 
+  clearTimeout(batch.timer);
+  delete batch.timer;
   batch.timer = setTimeout(function(){
     if(batch.data){
       monkey.write(batch.data.join(''));
@@ -52,6 +42,7 @@ function stdout(line){
     }
   });
 }
+
 monkey.patch(stdout);
 
 process.on('exit', function(){
@@ -60,12 +51,5 @@ process.on('exit', function(){
   }
 });
 
-function enable(){
-  var file = callers(enable)[0].getFileName();
-  registry[path.relative(wd, file) || './.'] = true;
-  return exports;
-}
-
-exports = module.exports = {
-  enable : enable
-};
+exports = module.exports = merge({ }, monkey);
+exports.enable = util.enable;

@@ -29,7 +29,6 @@
     "should": "*"
   },
   "dependencies": {
-    "callers-module": "^0.9.8",
     "stdout-monkey": "^1.0.20",
     "v8-callsites": "^1.0.32"
   },

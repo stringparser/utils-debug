@@ -1,25 +1,25 @@
 'use strict';
 
-require('./.').enable();
+var debug = require('./.').enable(__filename);
 
-console.log('hey there');
+debug('hey there');
 
 someMethod();
 
 function someMethod(){
-  console.log('simple and easy');
-  console.log('debug');
+  debug('simple and easy');
+  debug('debug');
   otherMethod();
 }
 
 function otherMethod(){
-  console.log('with useful information');
+  debug('with useful information');
   yetAnother();
 }
 
 function yetAnother(){
-  console.log('just like...');
-  console.log('... you had imagined');
+  debug('just like...');
+  debug('... you had imagined');
 }
 
 

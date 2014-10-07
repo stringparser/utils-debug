@@ -1,70 +1,79 @@
 'use strict';
 
 var site = require('v8-callsites');
-var monkey = require('stdout-monkey')();
-
-var batch = { };
 var util = require('./lib/utils');
 
-function debug(line){
+exports = module.exports = {
+  enable : enable
+};
 
-  var frame = site(console.log)[0];
-  var file = util.relative(frame.getFileName());
+var arr = [];
+/*var __push = arr.forEach;*/
+var __forEach = arr.forEach;
 
-  if( !util.registry(file) ){
-    return monkey.write(line);
+var batch = { };
+
+function enable(filename){
+
+  var filerel = util.relative(
+    filename || site(enable)[0].getFileName()
+  );
+
+  if( util.skip(filerel) ){
+    return function debugSkipped(){ };
   }
 
-  if( util.skip(file) ){
-    return ;
-  }
+  debug.filename = filerel;
 
-  batch.time = batch.time || process.hrtime();
-  var shot = util.relative('at '+frame + '\n');
+  function debug(/* arguments */){
 
-  batch.file = batch.file || file;
-  batch.data = batch.data || [];
+    var frame = site(debug);
+    var file = debug.filename;
 
-  if( util.regexpOf(batch.data, shot) < 0 ){
-    batch.data.push(shot);
-  }
-
-  if( batch.file !== file ){
-    monkey.write(batch.data.join(''));
-    batch = {
-      file : file,
-      time : process.hrtime()
-    };
-    return ;
-  }
-
-  batch.data.push(' '+line);
-
-  clearTimeout(batch.timer);
-  delete batch.timer;
-  batch.timer = setTimeout(function(){
-    if(batch.data){
-      monkey.write(batch.data.join(''));
-      batch = { };
+    if( util.skip(file, frame[0]) ){
+      return ;
     }
-  });
-}
 
-monkey.patch(debug);
+    var shot = util.relative(''+frame[0]);
+    batch.data = batch.data || [shot];
+
+    if( util.regexpOf(batch.data, shot, ':') < 0 ){
+      batch.data.push(shot);
+    }
+
+    if( debug.filename !== file ){
+      console.log(batch.data.join('\n'));
+      batch = { time : process.hrtime() };
+      return ;
+    }
+
+    var index = batch.data.push(' ') - 1;
+    __forEach.call(arguments, function(elem){
+      if(typeof elem !== 'string'){
+        batch.data[index] += ' '
+          + util.inspect(elem, { colors : true });
+      }
+      batch.data[index] += elem;
+    });
+
+    clearTimeout(batch.timer);
+    delete batch.timer;
+
+    batch.timer = setTimeout(function(){
+      if(batch.data){
+        console.log(batch.data.join('\n'));
+        batch = { };
+      }
+    });
+  }
+
+  return debug;
+}
 
 process.once('exit', function(){
   if(batch.data){
-    monkey.write(batch.data.join(''));
+    util.console(batch.data);
   }
 });
 
-function enable(){
-  util.register(enable);
-  return module.exports;
-}
-
-module.exports =  {
-   enable : enable,
-   monkey : monkey,
-    write : debug
-};
+exports.enable = enable;

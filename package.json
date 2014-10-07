@@ -1,7 +1,7 @@
 {
   "name": "utils-debug",
-  "version": "0.5.11",
-  "description": "simpler debug utility",
+  "version": "0.5.12",
+  "description": "unobtrusive debug utility",
   "main": "index.js",
   "engines": {
     "node": ">= 0.9.0"

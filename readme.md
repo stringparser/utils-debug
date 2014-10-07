@@ -4,7 +4,7 @@
 [<img alt="NPM version" src="http://img.shields.io/npm/v/utils-debug.svg?style=flat-square" align="right"/>](http://www.npmjs.org/package/utils-debug)
 
 <br>
-simple debug utility
+unobtrusive debug utility
 
 ## example
 

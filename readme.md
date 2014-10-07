@@ -72,7 +72,7 @@ debug('hey there');
 Thats basically *it*. Passing the `__filename` is optional.
 
 ### path filter
-> Use the <kbd>Tab</kbd> completion.
+> Use <kbd>Tab</kbd> completion.
 
 To enable the debug functions that live in your code use their relative path. 
 

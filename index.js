@@ -2,7 +2,6 @@
 
 var site = require('v8-callsites');
 var monkey = require('stdout-monkey')();
-var prettyTime = require('pretty-hrtime');
 
 var batch = { };
 var util = require('./lib/utils');

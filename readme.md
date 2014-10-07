@@ -87,6 +87,7 @@ You want expressive, unintrusive debugging.
 ## todo
 
  - [ ] make some tests
+ - [ ] be able to also filter by method
  - [ ] be able to format the output as much as one likes
  - [ ] shorten debugging paths for `node_modules` directory
 

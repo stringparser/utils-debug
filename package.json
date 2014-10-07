@@ -32,7 +32,8 @@
   "dependencies": {
     "callers-module": "^0.9.12",
     "lodash.merge": "^2.4.1",
-    "stdout-monkey": "^1.0.20",
+    "pretty-hrtime": "^0.2.2",
+    "stdout-monkey": "^1.0.21",
     "v8-callsites": "^1.0.32"
   },
   "scripts": {

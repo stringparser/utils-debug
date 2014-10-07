@@ -1,6 +1,6 @@
 {
   "name": "utils-debug",
-  "version": "0.5.12",
+  "version": "0.5.13",
   "description": "unobtrusive debug utility",
   "main": "index.js",
   "engines": {

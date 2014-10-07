@@ -127,7 +127,7 @@ There are plans to add `glob` matching as well.
 
 ## why
 
-You want expressive, unintrusive debugging.
+You want expressive, unobtrusive debugging.
 
 ## todo
 

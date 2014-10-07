@@ -3,9 +3,7 @@
 var site = require('v8-callsites');
 var util = require('./lib/utils');
 
-exports = module.exports = {
-  enable : enable
-};
+exports = module.exports = Debug;
 
 var arr = [];
 /*var __push = arr.forEach;*/
@@ -13,10 +11,10 @@ var __forEach = arr.forEach;
 
 var batch = { };
 
-function enable(filename){
+function Debug(filename){
 
   var filerel = util.relative(
-    filename || site(enable)[0].getFileName()
+    filename || site(Debug)[0].getFileName()
   );
 
   if( util.skip(filerel) ){
@@ -75,5 +73,3 @@ process.once('exit', function(){
     util.console(batch.data);
   }
 });
-
-exports.enable = enable;

@@ -2,6 +2,7 @@
 
 [<img alt="build" src="http://img.shields.io/travis/stringparser/utils-debug/master.svg?style=flat-square" align="left"/>](https://travis-ci.org/stringparser/utils-debug/builds)
 [<img alt="NPM version" src="http://img.shields.io/npm/v/utils-debug.svg?style=flat-square" align="right"/>](http://www.npmjs.org/package/utils-debug)
+
 <br>
 simple debug utility
 
@@ -12,31 +13,31 @@ simple debug utility
 
 var debug = require('utils-debug').enable();
 
-console.log('hey there');
+debug('hey there');
 
 someMethod();
 
 function someMethod(){
-  console.log('simple and easy');
-  console.log('debug');
+  debug('simple and easy');
+  debug('debug');
   otherMethod();
 }
 
 function otherMethod(){
-  console.log('with useful information');
+  debug('with useful information');
   yetAnother();
 }
 
 function yetAnother(){
-  console.log('just like...');
-  console.log('... you had imagined');
+  debug('just like...');
+  debug('... you had imagined');
 }
 ```
 
-and like you are [used to](https://github.com/visionmedia/debug)
+use **filenames** instead of mnemonics
 
 ```sh
-utils-debug (master) ✗ DEBUG=example node example
+utils-debug (master) ✔ DEBUG=example node example
 at Object.<anonymous> (example.js:5:9)
  hey there
 at someMethod (example.js:10:11)
@@ -49,25 +50,33 @@ at yetAnother (example.js:21:11)
  ... you had imagined
 ```
 
-but without any other function, just plain old `console.log`
+filter by method name
 
-## install
+```sh
+utils-debug (master) ✔ DEBUG=*#someMethod#yetAnother node example.js
+someMethod (example.js:10:3)
+ simple and easy
+ debug
+yetAnother (example.js:21:3)
+ just like...
+ ... you had imagined
+```
 
-    npm install --save utils-debug
-
-
-### documentation
+## documentation
 
 ```js
-var debug require('utils-debug');
-    debug.enable();
+var debug = require('utils-debug')([__filename]);
+
+debug('hey there');
 ```
 
 Thats basically *it*. 
 
-All `console.log` of the file will not print to `stdout` if there is no **DEBUG** environment variable set. 
+### path filter
 
-If there is a **DEBUG** environment variable, just run it as you usually do with [debug](https://github.com/visionmedia/debug) but instead of using some label you wrote on the source code of some file **use the path of the file** relative to the project. That is, if you project looks like below
+To enable the debug functions that live in your files use their relative path. 
+
+That is, if you project looks like below
 
 ```
 project-dir
@@ -76,9 +85,47 @@ project-dir
  |-index.js
 ```
 
-and want to debug `lib/code.js` go ahead and write `DEBUG=lib/code node index.js`. 
+and want to debug `lib/code.js` you simply write
 
-And yes, the extension is not necessary.
+    DEBUG=lib/code.js node index.js
+
+or
+
+    DEBUG=lib/code node index.js 
+
+So yes, the extension is not necessary.
+
+To debug more than one file separate them with commas like so
+
+    DEBUG=lib/code,index node index.js
+
+And use the <kbd>Tab</kbd> of your keyboard, is very handy to fill up those paths.
+
+### function filter
+
+Method names can also be used to enable their output
+
+```sh
+utils-debug (master) ✔ DEBUG=*#someMethod#yetAnother node example.js
+someMethod (example.js:10:3)
+ simple and easy
+ debug
+yetAnother (example.js:21:3)
+ just like...
+ ... you had imagined
+```
+
+As you can see above, the wildcard `*` was used followed of '#<methodname>'.
+
+The only difference for this filter is that you have to separate methods with '#' instead of a comma.
+
+### wildcards
+
+At the moment the only wildcard is `*`. This enables debugging for every file if nothing else is specified (see [method-filter](#method-filter)).
+
+    DEBUG=* node index.js 
+
+There are plans to add `glob` matching as well.
 
 ## why
 
@@ -86,10 +133,10 @@ You want expressive, unintrusive debugging.
 
 ## todo
 
+ - [ ] aliasing
+ - [ ] glob matching
  - [ ] make some tests
- - [ ] be able to also filter by method
- - [ ] be able to format the output as much as one likes
- - [ ] shorten debugging paths for `node_modules` directory
+ - [ ] be able to format the output
 
 ### license
 

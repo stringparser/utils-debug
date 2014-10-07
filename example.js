@@ -1,6 +1,6 @@
 'use strict';
 
-var debug = require('./.').enable(__filename);
+var debug = require('./.')(__filename);
 
 debug('hey there');
 

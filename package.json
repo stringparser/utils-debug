@@ -1,6 +1,6 @@
 {
   "name": "utils-debug",
-  "version": "0.5.10",
+  "version": "0.5.11",
   "description": "simpler debug utility",
   "main": "index.js",
   "engines": {

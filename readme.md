@@ -11,7 +11,7 @@ simple debug utility
 ```js
 'use strict';
 
-var debug = require('utils-debug').enable();
+var debug = require('utils-debug')(__filename);
 
 debug('hey there');
 
@@ -70,7 +70,7 @@ var debug = require('utils-debug')([__filename]);
 debug('hey there');
 ```
 
-Thats basically *it*. 
+Thats basically *it*. Passing the `__filename` is optional.
 
 ### path filter
 

@@ -8,12 +8,10 @@
   },
   "repository": "stringparser/utils-debug",
   "keywords": [
-    "stdout",
-    "debug",
     "simple",
+    "debug",
     "utils",
-    "wee",
-    "unintrusive"
+    "util"
   ],
   "author": {
     "name": "Javier Carrillo"

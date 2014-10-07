@@ -10,15 +10,26 @@ simple debug utility
 ```js
 'use strict';
 
-var debug = require('utils-debug');
-    debug.enable();
+var debug = require('utils-debug').enable();
 
-console.log('hello');
+console.log('hey there');
 
 someMethod();
 
 function someMethod(){
-  console.log('what up!');
+  console.log('simple and easy');
+  console.log('debug');
+  otherMethod();
+}
+
+function otherMethod(){
+  console.log('with useful information');
+  yetAnother();
+}
+
+function yetAnother(){
+  console.log('just like...');
+  console.log('... you had imagined');
 }
 ```
 
@@ -27,9 +38,15 @@ and like you are [used to](https://github.com/visionmedia/debug)
 ```sh
 utils-debug (master) ✗ DEBUG=example node example
 at Object.<anonymous> (example.js:5:9)
-hello
+ hey there
 at someMethod (example.js:10:11)
-what up!
+ simple and easy
+ debug
+at otherMethod (example.js:16:11)
+ with useful information
+at yetAnother (example.js:21:11)
+ just like...
+ ... you had imagined
 ```
 
 but without any other function, just plain old `console.log`

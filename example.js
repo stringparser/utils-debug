@@ -2,18 +2,24 @@
 
 require('./.').enable();
 
-console.log('hello!');
+console.log('hey there');
 
 someMethod();
 
 function someMethod(){
-  console.log('what up!');
-  console.log('hey dowg');
+  console.log('simple and easy');
+  console.log('debug');
   otherMethod();
 }
 
 function otherMethod(){
-  console.log('something different');
+  console.log('with useful information');
+  yetAnother();
+}
+
+function yetAnother(){
+  console.log('just like...');
+  console.log('... you had imagined');
 }
 
 

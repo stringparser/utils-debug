@@ -51,6 +51,7 @@ function Debug(filename){
       if(typeof elem !== 'string'){
         batch.data[index] += ' '
           + util.inspect(elem, { colors : true });
+        return ;
       }
       batch.data[index] += elem;
     });

@@ -17,6 +17,7 @@ function Debug(filename){
     filename || site(Debug)[0].getFileName()
   );
 
+  util.register(filerel);
   if( util.skip(filerel) ){
     return function debugSkipped(){ };
   }

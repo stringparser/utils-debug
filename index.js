@@ -72,6 +72,6 @@ function Debug(filename){
 
 process.once('exit', function(){
   if(batch.data){
-    util.console(batch.data);
+    console.log(batch.data.join('\n'));
   }
 });

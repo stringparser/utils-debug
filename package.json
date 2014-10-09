@@ -28,8 +28,8 @@
     "should": "*"
   },
   "dependencies": {
-    "callers-module": "^0.9.12",
-    "v8-callsites": "^1.0.32"
+    "callers-module": "^0.9.13",
+    "v8-callsites": "^1.0.35"
   },
   "scripts": {
     "lint": "jshint lib test index.js --reporter node_modules/jshint-stylish/stylish.js --exclude node_modules",

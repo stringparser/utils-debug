@@ -53,7 +53,7 @@ function Debug(filename){
           + util.inspect(elem, { colors : true });
         return ;
       }
-      batch.data[index] += elem;
+      batch.data[index] += ' ' + elem;
     });
 
     clearTimeout(batch.timer);

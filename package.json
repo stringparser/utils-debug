@@ -1,6 +1,6 @@
 {
   "name": "utils-debug",
-  "version": "0.5.21",
+  "version": "0.5.22",
   "description": "unobtrusive debug utility",
   "main": "index.js",
   "engines": {
@@ -28,8 +28,8 @@
     "should": "*"
   },
   "dependencies": {
-    "callers-module": "^0.9.13",
-    "v8-callsites": "^1.0.35"
+    "callers-module": "*",
+    "v8-callsites": "*"
   },
   "scripts": {
     "lint": "jshint lib test index.js --reporter node_modules/jshint-stylish/stylish.js --exclude node_modules",

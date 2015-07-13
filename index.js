@@ -52,7 +52,7 @@ function Debug(/* no arguments */){
   var filerel = '.' + path.sep + path.relative(process.cwd(), filename);
 
   function debug(/* arguments */){
-    var site = 'at ' + util.callsites(debug)[0];
+    var site = 'at ' + util.callsites(debug, 1)[0];
     var frame = site.match(/^at[ ]+([^ ]+)[^:]+/);
     if(flags.fn && !flags.fn[frame[1]]){ return ; }
 

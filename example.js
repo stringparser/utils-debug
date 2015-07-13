@@ -21,5 +21,3 @@ function yetAnother(){
   debug('just like...');
   debug('... you had imagined');
 }
-
-

@@ -5,39 +5,62 @@ var util = require('./lib/util');
 
 exports = module.exports = Debug;
 
-var files;
-var noStar = true;
+var flags = util.debugFlags;
 var currentFrame;
+
 function debugDisabled(){}
 
-if(process.env.DEBUG){
-  files = process.env.DEBUG.trim().split(/[, ]+/).map(function(filename){
-    if(filename === '*'){ noStar = false; return filename; }
-    if(!path.extname(filename)){ filename += '.js'; }
-    return path.resolve('.', filename);
-  }).join(' ');
-}
+console.log(flags);
+
+/*
+# Debug factory
+```js
+  function Debug([filename])
+```
+Returns a noop if there are no flags given (no process.env.DEBUG)
+or if the file is not included on the process.env.DEBUG flags.
+
+`DEBUG` flags available to filter output are:
+
+- paths separated by comma (relative to the CWD)
+  > i.e. lib/file1.js,lib/file2.js (extension is optional)
+
+- star paths separated by comma
+  > i.e. lib/*,build/*
+
+- function names starting with a pound sign
+  > i.e. *#method1#method2 (* can still filter by function name)
+
+_arguments_
+ - `filename`, type string optional, **absolute** path of the filename
+
+_returns_
+ - an empty function (or noop) if there was no `process.env.DEBUG`
+ - a `noop` if the file did not pass the checks given by the flags
+ - a `debug` function that inspects and uses the same format as console.log
+*/
 
 function Debug(filename){
-  if(!files){ return debugDisabled; } else if(typeof filename !== 'string'){
+  if(!flags){ return debugDisabled; }
+  else if(typeof filename !== 'string'){
     filename = util.callsites(Debug)[0].getFileName();
   }
 
-  if(noStar && files.indexOf(filename) < 0){
+  if(flags.noStar && !flags.file[filename]){
+    return debugDisabled;
+  } else if(flags.starDir && !flags.starDir[path.dirname(filename)]){
     return debugDisabled;
   }
 
-  var cwd = process.cwd();
-  var filerel = '.' + path.sep + path.relative(cwd, filename);
+  var filerel = '.' + path.sep + path.relative(process.cwd(), filename);
 
   function debug(/* arguments */){
-    var frame = ('at ' + util.callsites(debug)).replace(filename, filerel);
-    debug.frame = frame.replace(/\:.+/, '');
-    if(debug.frame !== currentFrame){
-      console.log(frame,
-        debug.time && util.prettyTime(process.hrtime(debug.time)) || ''
-      );
-      debug.time = process.hrtime();
+    var site = 'at ' + util.callsites(debug)[0];
+    var frame = site.match(/^at[ ]+([^ ]+)[^:]+/);
+    if(flags.fn && !flags.fn[frame[1]]){ return ; }
+
+    if(frame[0] !== currentFrame){
+      console.log(site.replace(filename, filerel));
     }
 
     console.log.apply(console,
@@ -47,7 +70,7 @@ function Debug(filename){
       })
     );
 
-    currentFrame = debug.frame;
+    currentFrame = frame[0];
   }
 
   return debug;

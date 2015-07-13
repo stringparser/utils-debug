@@ -1,77 +1,54 @@
 'use strict';
 
-var site = require('v8-callsites');
-var util = require('./lib/utils');
+var path = require('path');
+var util = require('./lib/util');
 
 exports = module.exports = Debug;
 
-var arr = [];
-/*var __push = arr.forEach;*/
-var __forEach = arr.forEach;
+var files;
+var noStar = true;
+var currentFrame;
+function debugDisabled(){}
 
-var batch = { };
+if(process.env.DEBUG){
+  files = process.env.DEBUG.trim().split(/[, ]+/).map(function(filename){
+    if(filename === '*'){ noStar = false; return filename; }
+    if(!path.extname(filename)){ filename += '.js'; }
+    return path.resolve('.', filename);
+  }).join(' ');
+}
 
 function Debug(filename){
-
-  var filerel = util.relative(
-    filename || site(Debug)[0].getFileName()
-  );
-
-  util.register(filerel);
-  if( util.skip(filerel) ){
-    return function debugSkipped(){ };
+  if(!files){ return debugDisabled; } else if(typeof filename !== 'string'){
+    filename = util.callsites(Debug)[0].getFileName();
   }
 
-  debug.filename = filerel;
+  if(noStar && files.indexOf(filename) < 0){
+    return debugDisabled;
+  }
+
+  var cwd = process.cwd();
+  var filerel = '.' + path.sep + path.relative(cwd, filename);
 
   function debug(/* arguments */){
-
-    var frame = site(debug);
-    var file = debug.filename;
-
-    if( util.skip(file, frame[0]) ){
-      return ;
+    var frame = ('at ' + util.callsites(debug)).replace(filename, filerel);
+    debug.frame = frame.replace(/\:.+/, '');
+    if(debug.frame !== currentFrame){
+      console.log(frame,
+        debug.time && util.prettyTime(process.hrtime(debug.time)) || ''
+      );
+      debug.time = process.hrtime();
     }
 
-    var shot = util.relative(''+frame[0]);
-    batch.data = batch.data || [shot];
+    console.log.apply(console,
+      util.map.call(arguments, function(arg){
+        if(typeof arg === 'string'){ return arg; }
+        return util.inspect(arg, {colors: true});
+      })
+    );
 
-    if( util.regexpOf(batch.data, shot, ':') < 0 ){
-      batch.data.push(shot);
-    }
-
-    if( debug.filename !== file ){
-      console.log(batch.data.join('\n'));
-      batch = { time : process.hrtime() };
-      return ;
-    }
-
-    var index = batch.data.push(' ') - 1;
-    __forEach.call(arguments, function(elem){
-      if(typeof elem !== 'string'){
-        batch.data[index] += ' '
-          + util.inspect(elem, { colors : true });
-        return ;
-      }
-      batch.data[index] += ' ' + elem;
-    });
-
-    clearTimeout(batch.timer);
-    delete batch.timer;
-
-    batch.timer = setTimeout(function(){
-      if(batch.data){
-        console.log(batch.data.join('\n'));
-        batch = { };
-      }
-    });
+    currentFrame = debug.frame;
   }
 
   return debug;
 }
-
-process.once('exit', function(){
-  if(batch.data){
-    console.log(batch.data.join('\n'));
-  }
-});

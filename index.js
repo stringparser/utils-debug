@@ -15,12 +15,15 @@ console.log(flags);
 /*
 # module.exports
 ```js
-  function Debug([filename])
+  function Debug(**no arguments**)
 ```
-Returns a noop if there are no flags given (no process.env.DEBUG)
-or if the file is not included on the process.env.DEBUG flags.
+Factory that returns a noop when: no flags given (no process.env.DEBUG)
+or the file is not included on the process.env.DEBUG flags.
 
-`DEBUG` flags available to filter output are:
+If the filename from where it was called matches the given flags
+(at process.env.DEBUG) then the factory will return a `debug` function.
+
+The `DEBUG` flags available are:
 
 - paths separated by comma (relative to the CWD)
   > i.e. lib/file1.js,lib/file2.js (extension is optional)
@@ -30,8 +33,6 @@ or if the file is not included on the process.env.DEBUG flags.
 
 - function names starting with a pound sign
   > i.e. *#method1#method2 (* can still filter by function name)
-
-**NOTE**: The factory does not need no arguments
 
 _returns_
  - an empty function (or noop) if there was no `process.env.DEBUG`

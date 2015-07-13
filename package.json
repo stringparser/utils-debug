@@ -23,12 +23,11 @@
   "homepage": "https://github.com/stringparser/utils-debug",
   "devDependencies": {
     "jshint": "*",
-    "jshint-stylish": "*",
     "mocha": "*",
     "should": "*"
   },
   "dependencies": {
-    "callers-module": "*",
+    "pretty-hrtime": "^1.0.0",
     "v8-callsites": "*"
   },
   "scripts": {

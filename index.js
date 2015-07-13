@@ -13,7 +13,7 @@ function debugDisabled(){}
 console.log(flags);
 
 /*
-# Debug factory
+# module.exports
 ```js
   function Debug([filename])
 ```
@@ -31,8 +31,7 @@ or if the file is not included on the process.env.DEBUG flags.
 - function names starting with a pound sign
   > i.e. *#method1#method2 (* can still filter by function name)
 
-_arguments_
- - `filename`, type string optional, **absolute** path of the filename
+**NOTE**: The factory does not need no arguments
 
 _returns_
  - an empty function (or noop) if there was no `process.env.DEBUG`
@@ -40,12 +39,10 @@ _returns_
  - a `debug` function that inspects and uses the same format as console.log
 */
 
-function Debug(filename){
+function Debug(/* no arguments */){
   if(!flags){ return debugDisabled; }
-  else if(typeof filename !== 'string'){
-    filename = util.callsites(Debug)[0].getFileName();
-  }
 
+  var filename = util.callsites(Debug, 1)[0].getFileName();
   if(flags.noStar && !flags.file[filename]){
     return debugDisabled;
   } else if(flags.starDir && !flags.starDir[path.dirname(filename)]){

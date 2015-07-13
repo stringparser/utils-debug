@@ -27,7 +27,6 @@
     "should": "*"
   },
   "dependencies": {
-    "pretty-hrtime": "^1.0.0",
     "v8-callsites": "*"
   },
   "scripts": {

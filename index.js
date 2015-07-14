@@ -18,12 +18,12 @@ function Debug(/* no arguments */){
   var filerel = path.relative(cwd, filename);
 
   function debug(/* arguments */){
-    var site = util.callsites(debug).toString();
+    var site = util.callsites(debug, 1).toString();
     var frame = site.match(/([^ ]+)[^:]+/);
     if(util.debug.fn && !util.debug.fn[frame[1]]){ return ; }
 
     if(frame[0] !== currentFrame){
-      console.log('at %s', site.replace(filename, filerel));
+      console.log(site.replace(filename, filerel));
     }
 
     console.log.apply(console,

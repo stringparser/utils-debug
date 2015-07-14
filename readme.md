@@ -52,10 +52,10 @@ just like...
 ... you had imagined
 ```
 
-filter by **function** name
+filter by **function name**
 
 ```
-$ DEBUG=*#someMethod#yetAnother node example.js
+$ DEBUG=*#fn1#fn2 node example.js
 fn1 (example.js:10:3)
  simple and easy debug
 fn2 (example.js:21:3)
@@ -74,24 +74,28 @@ The module exports a function factory.
 ```js
   function Debug(/* no arguments */)
 ```
-It returns a noop (empty function) when no flags given (`no process.env.DEBUG`)
-or the file is not included on the `process.env.DEBUG` flags.
+It returns a noop (empty function) when no flags given (no `process.env.DEBUG`)
+or the file is not included on the `process.env.DEBUG` flag.
 
-The `DEBUG` flags available are:
+### filters
 
-_paths separated by comma_ (relative to the CWD)
+`DEBUG` can contain any of the following patterns
+
+_file paths separated by comma_
 
 ```sh
 $ DEBUG=lib/file1.js,lib/file2 node program.js
 ```
 
-The extension is optional if a path ends with slash (forward or backward) it will be considered
-a directory.
+The extension is optional if a path ends with slash (forward or backward) _it will be considered
+a directory_.
 
-_star paths separated by comma_
+> NOTE: paths have to be relative to the CWD
+
+_diretories/filenames separated by comma_
 
 ```sh
-$ DEBUG=lib/*,build/* node program.js
+$ DEBUG=lib/,build/file.js node program.js
 ```
 
 _function names starting with a pound sign_
@@ -99,6 +103,13 @@ _function names starting with a pound sign_
 ```sh
 $ DEBUG=*#method1#method2 node program.js
 ```
+
+_wilcards_ (only one at the moment)
+```sh
+$ DEBUG=* node program.js
+```
+
+At the moment the only wildcard possible is `*`.
 
 _returns_
  - `noop` (empty function) if there was no `process.env.DEBUG`
@@ -118,7 +129,8 @@ With [npm][npm-link]
 
 ## todo
 
- - [ ] aliasing
+- [ ] aliasing (instead of filename)
+- [ ] glob matching
 
 ### license
 

@@ -81,22 +81,16 @@ or the file is not included on the `process.env.DEBUG` flag.
 
 `DEBUG` can contain any of the following patterns
 
-_file paths separated by comma_
+_diretories/filenames paths separated by comma_
 
 ```sh
-$ DEBUG=lib/file1.js,lib/file2 node program.js
+$ DEBUG=lib/dir/,lib/file1,lib/file2.js node program.js
 ```
 
-The extension is optional if a path ends with slash (forward or backward) _it will be considered
+The extension is optional. If a path ends with slash (forward or backward) _it will be considered
 a directory_.
 
 > NOTE: paths have to be relative to the CWD
-
-_diretories/filenames separated by comma_
-
-```sh
-$ DEBUG=lib/,build/file.js node program.js
-```
 
 _function names starting with a pound sign_
 

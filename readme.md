@@ -1,7 +1,11 @@
-# utils-debug [<img alt="progressed.io" src="http://progressed.io/bar/75" align="right"/>](https://github.com/fehmicansaglam/progressed.io)
+# utils-debug [![NPM version][npm-badge]][npm-link][![downloads][downloads-bagde]][npm-link]
 
-[<img alt="build" src="http://img.shields.io/travis/stringparser/utils-debug/master.svg?style=flat-square" align="left"/>](https://travis-ci.org/stringparser/utils-debug/builds)
-[<img alt="NPM version" src="http://img.shields.io/npm/v/utils-debug.svg?style=flat-square" align="right"/>](http://www.npmjs.org/package/utils-debug)
+[![build][build-badge]][build-link]
+
+[documentation](#documentation) -
+[install](#install) -
+[todo](#todo) -
+[why](#why)
 
 <br>
 unobtrusive debug utility
@@ -9,26 +13,25 @@ unobtrusive debug utility
 ## example
 
 ```js
-'use strict';
-
-var debug = require('utils-debug')(__filename);
+var debug = require('./.')();
 
 debug('hey there');
 
-someMethod();
+fn1();
 
-function someMethod(){
-  debug('simple and easy debug');
-  otherMethod();
+function fn1(){
+  debug('%s', 'simple');
+  debug('and easy');
+  debug('debug');
+  fn2();
 }
 
-function otherMethod(){
-  debug('with useful information');
-  debug('if there is a point to see it')
-  yetAnother();
+function fn2(){
+  debug('if you need it');
+  fn3();
 }
 
-function yetAnother(){
+function fn3(){
   debug('just like...');
   debug('... you had imagined');
 }
@@ -36,27 +39,28 @@ function yetAnother(){
 
 use **filenames** instead of mnemonics
 
-```sh
-utils-debug (master) ✔ DEBUG=example node example
-at Object.<anonymous> (example.js:5:9)
- hey there
-at someMethod (example.js:10:11)
- simple and easy debug
-at otherMethod (example.js:16:11)
- with useful information
- if there is a point to see it
-at yetAnother (example.js:21:11)
- just like...
- ... you had imagined
+```
+$ DEBUG=example.js node example.js
+at Object.<anonymous> (example.js:5:1)
+hey there
+at fn1 (example.js:10:3)
+simple
+and easy
+debug
+at fn2 (example.js:18:3)
+if you need it
+at fn3 (example.js:23:3)
+just like...
+... you had imagined
 ```
 
-filter by `function` name
+filter by **function** name
 
-```sh
-utils-debug (master) ✔ DEBUG=*#someMethod#yetAnother node example.js
-someMethod (example.js:10:3)
+```
+$ DEBUG=*#someMethod#yetAnother node example.js
+fn1 (example.js:10:3)
  simple and easy debug
-yetAnother (example.js:21:3)
+fn2 (example.js:21:3)
  just like...
  ... you had imagined
 ```
@@ -64,78 +68,71 @@ yetAnother (example.js:21:3)
 ## documentation
 
 ```js
-var debug = require('utils-debug')([__filename]);
-
-debug('hey there');
+var Debug = require('utils-debug');
 ```
 
-Thats basically *it*. Passing the `__filename` is optional.
+The module exports a function factory.
 
-### path filter
-> Use <kbd>Tab</kbd> completion.
-
-To enable the debug functions that live in your code use their relative path. 
-
-That is, if you project looks like below
-
+```js
+  function Debug(/* no arguments */)
 ```
-project-dir
- |-lib
-   |--> code.js
- |-index.js
-```
+It returns a noop (empty function) when no flags given (`no process.env.DEBUG`)
+or the file is not included on the `process.env.DEBUG` flags.
 
-and want to debug `lib/code.js` you simply write
+The `DEBUG` flags available are:
 
-    DEBUG=lib/code.js node index.js
-
-or
-
-    DEBUG=lib/code node index.js 
-
-So yes, the extension is not necessary.
-
-To debug more than one file separate them with comma like so
-
-    DEBUG=lib/code,index node index.js
-
-### function filter
-> see how functions flow with no setup
-
-Method names can also be used to enable their output
+_paths separated by comma_ (relative to the CWD)
 
 ```sh
-utils-debug (master) ✔ DEBUG=*#someMethod#yetAnother node example.js
-someMethod (example.js:10:3)
- simple and easy debug
-yetAnother (example.js:21:3)
- just like...
- ... you had imagined
+$ DEBUG=lib/file1.js,lib/file2 node program.js
 ```
 
-As you can see above, the wildcard `*` was used followed of '#<function-name>'.
+The extension is optional if a path ends with slash (forward or backward) it will be considered
+a directory.
 
-The only difference for this filter is that you have to separate methods with '#' instead of a comma.
+_star paths separated by comma_
 
-### wildcards
+```sh
+$ DEBUG=lib/*,build/* node program.js
+```
 
-At the moment the only wildcard is `*`. This enables debugging for every file if nothing else is specified (see [method-filter](#function-filter)).
+_function names starting with a pound sign_
 
-    DEBUG=* node index.js 
+```sh
+$ DEBUG=*#method1#method2 node program.js
+```
 
-There are plans to add `glob` matching as well.
+_returns_
+ - `noop` (empty function) if there was no `process.env.DEBUG`
+ - `noop` if the file did not pass the checks given by the flags
+ - `debug` function that inspects and uses the same format as `console.log`
 
 ## why
 
 You want expressive, unobtrusive debugging.
 
+## install
+
+With [npm][npm-link]
+```sh
+ $ npm install utils-debug
+```
+
 ## todo
 
  - [ ] aliasing
- - [ ] glob matching
- - [ ] make some tests
- - [ ] be able to format the output
 
 ### license
 
-[<img alt="LICENSE" src="http://img.shields.io/npm/l/utils-debug.svg?style=flat-square"/>](http://opensource.org/licenses/MIT)
+[![LICENSE][license-badge]][license-link]
+
+[npm-link]: http://www.npmjs.org/package/utils-debug
+[npm-badge]: http://img.shields.io/npm/v/utils-debug.svg?style=flat-square
+
+[build-link]: https://travis-ci.org/stringparser/utils-debug/builds
+[build-badge]: http://img.shields.io/travis/stringparser/utils-debug/master.svg?style=flat-square
+
+[license-link]: http://opensource.org/licenses/MIT
+[license-badge]: http://img.shields.io/npm/l/utils-debug.svg?style=flat-square
+
+[downloads-bagde]: http://img.shields.io/npm/dm/utils-debug.svg?style=flat-square

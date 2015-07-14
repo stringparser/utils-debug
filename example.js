@@ -8,8 +8,7 @@ fn1();
 
 function fn1(){
   debug('%s', 'simple');
-  debug('and');
-  debug('easy');
+  debug('and easy');
   debug('debug');
   fn2();
 }

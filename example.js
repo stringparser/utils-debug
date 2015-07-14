@@ -1,23 +1,25 @@
 'use strict';
 
-var debug = require('./.')(__filename);
+var debug = require('./.')();
 
 debug('hey there');
 
-someMethod();
+fn1();
 
-function someMethod(){
-  debug('simple and easy');
+function fn1(){
+  debug('%s', 'simple');
+  debug('and');
+  debug('easy');
   debug('debug');
-  otherMethod();
+  fn2();
 }
 
-function otherMethod(){
-  debug('with useful information');
-  yetAnother();
+function fn2(){
+  debug('if you need it');
+  fn3();
 }
 
-function yetAnother(){
+function fn3(){
   debug('just like...');
   debug('... you had imagined');
 }

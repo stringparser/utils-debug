@@ -1,6 +1,6 @@
 # utils-debug [![NPM version][npm-badge]][npm-link][![downloads][downloads-bagde]][npm-link]
 
-[![build][build-badge]][build-link] - 
+[![build][build-badge]][build-link] -
 [documentation](#documentation) -
 [install](#install) -
 [todo](#todo) -
@@ -12,7 +12,7 @@ unobtrusive debug utility
 ## example
 
 ```js
-var debug = require('./.')();
+var debug = require('utils-debug')();
 
 debug('hey there');
 

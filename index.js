@@ -23,7 +23,7 @@ function Debug(/* no arguments */){
     if(util.debug.fn && !util.debug.fn[frame[1]]){ return ; }
 
     if(frame[0] !== currentFrame){
-      console.log(site.replace(filename, filerel));
+      console.log('at', site.replace(filename, filerel));
     }
 
     console.log.apply(console,

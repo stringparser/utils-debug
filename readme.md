@@ -1,12 +1,11 @@
 # utils-debug [![NPM version][npm-badge]][npm-link][![downloads][downloads-bagde]][npm-link]
 
-[![build][build-badge]][build-link] -
+[![build][build-badge]][build-link]
 [documentation](#documentation) -
 [install](#install) -
 [todo](#todo) -
 [why](#why)
 
-<br>
 unobtrusive debug utility
 
 ## example

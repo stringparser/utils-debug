@@ -79,7 +79,14 @@ or the file is not included on the `process.env.DEBUG` flag.
 
 ### filters
 
-`DEBUG` can contain any of the following patterns
+Filters are used to enable `debug` functions that live in your code. To be specific: `DEBUG` can contain any of the following patterns
+
+_wilcards_
+```sh
+$ DEBUG=* node program.js
+```
+
+It will make any filename to match. At the moment the only wildcard implemented.
 
 _diretories/filenames paths separated by comma_
 
@@ -90,7 +97,7 @@ $ DEBUG=lib/dir/,lib/file1,lib/file2.js node program.js
 The extension is optional. If a path ends with slash (forward or backward) _it will be considered
 a directory_.
 
-> NOTE: paths have to be relative to the CWD
+> NOTE: paths have to be relative to the [CWD](https://en.wikipedia.org/wiki/Working_directory#In_operating_systems)
 
 _function names starting with a pound sign_
 
@@ -98,17 +105,10 @@ _function names starting with a pound sign_
 $ DEBUG=*#method1#method2 node program.js
 ```
 
-_wilcards_ (only one at the moment)
-```sh
-$ DEBUG=* node program.js
-```
-
-At the moment the only wildcard possible is `*`.
-
 _returns_
  - `noop` (empty function) if there was no `process.env.DEBUG`
  - `noop` if the file did not pass the checks given by the flags
- - `debug` function that inspects and uses the same format as `console.log`
+ - `debug` function that uses the same format as `console.log`
 
 ## why
 
@@ -118,12 +118,12 @@ You want expressive, unobtrusive debugging.
 
 With [npm][npm-link]
 ```sh
- $ npm install utils-debug
+$ npm install utils-debug
 ```
 
 ## todo
 
-- [ ] aliasing (instead of filename)
+- [ ] aliasing (to use it instead of filename)
 - [ ] glob matching
 
 ### license

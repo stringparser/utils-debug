@@ -5,12 +5,39 @@ var util = require('./lib/util');
 
 exports = module.exports = Debug;
 
-var flags = util.debugFlags;
+var cwd = process.cwd();
 var currentFrame;
 
 function debugDisabled(){}
 
-console.log(flags);
+function Debug(/* no arguments */){
+  if(!util.debug){ return debugDisabled; }
+
+  var filename = util.callsites(Debug, 1)[0].getFileName();
+  if(util.debug.skipFile(filename)){ return debugDisabled; }
+  var filerel = path.relative(cwd, filename);
+
+  function debug(/* arguments */){
+    var site = util.callsites(debug).toString();
+    var frame = site.match(/([^ ]+)[^:]+/);
+    if(util.debug.fn && !util.debug.fn[frame[1]]){ return ; }
+
+    if(frame[0] !== currentFrame){
+      console.log('at %s', site.replace(filename, filerel));
+    }
+
+    console.log.apply(console,
+      util.map.call(arguments, function(arg){
+        if(typeof arg === 'string'){ return arg; }
+        return util.inspect(arg, {colors: true});
+      })
+    );
+
+    currentFrame = frame[0];
+  }
+
+  return debug;
+}
 
 /*
 # module.exports
@@ -39,37 +66,3 @@ _returns_
  - a `noop` if the file did not pass the checks given by the flags
  - a `debug` function that inspects and uses the same format as console.log
 */
-
-function Debug(/* no arguments */){
-  if(!flags){ return debugDisabled; }
-
-  var filename = util.callsites(Debug, 1)[0].getFileName();
-  if(flags.noStar && !flags.file[filename]){
-    return debugDisabled;
-  } else if(flags.starDir && !flags.starDir[path.dirname(filename)]){
-    return debugDisabled;
-  }
-
-  var filerel = '.' + path.sep + path.relative(process.cwd(), filename);
-
-  function debug(/* arguments */){
-    var site = 'at ' + util.callsites(debug, 1)[0];
-    var frame = site.match(/^at[ ]+([^ ]+)[^:]+/);
-    if(flags.fn && !flags.fn[frame[1]]){ return ; }
-
-    if(frame[0] !== currentFrame){
-      console.log(site.replace(filename, filerel));
-    }
-
-    console.log.apply(console,
-      util.map.call(arguments, function(arg){
-        if(typeof arg === 'string'){ return arg; }
-        return util.inspect(arg, {colors: true});
-      })
-    );
-
-    currentFrame = frame[0];
-  }
-
-  return debug;
-}

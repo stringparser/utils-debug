@@ -3,6 +3,7 @@
 [![build][build-badge]][build-link]
 [documentation](#documentation) -
 [install](#install) -
+[tests](#tests)
 [todo](#todo) -
 [why](#why)
 
@@ -81,11 +82,6 @@ or the file is not included on the `process.env.DEBUG` flag.
 
 Filters are used to enable `debug` functions that live in your code. To be specific: `DEBUG` can contain any of the following patterns
 
-_wilcards_
-```sh
-$ DEBUG=* node program.js
-```
-
 It will make any filename to match. At the moment the only wildcard implemented.
 
 _diretories/filenames paths separated by comma_
@@ -104,11 +100,18 @@ _function names starting with a pound sign_
 ```sh
 $ DEBUG=*#method1#method2 node program.js
 ```
+_wilcards_ available are:
+ - `DEBUG=*` will match any file(s)
+ - `DEBUG=folder/*/*` any file one dir deep after `folder`
+ - `DEBUG=folder/*/file.js` matches any directory after `folder` 1 folder deep
+ - `DEBUG=folder/**` any file after directory `folder` with any folder depth
+ - `DEBUG=folder/**/file.js` any file after directory `folder` with any folder depth that ends up on `file.js`
 
 _returns_
  - `noop` (empty function) if there was no `process.env.DEBUG`
  - `noop` if the file did not pass the checks given by the flags
  - `debug` function that uses the same format as `console.log`
+
 
 ## why
 
@@ -119,6 +122,36 @@ You want expressive, unobtrusive debugging.
 With [npm][npm-link]
 ```sh
 $ npm install utils-debug
+```
+
+## tests
+
+To run the tests
+```
+  $ npm test  
+```
+
+output
+```
+  filter
+    ✓ resolves filepaths from CWD
+    ✓ files should not need extension
+    ✓ files should be separated by comma
+    ✓ DEBUG=* makes util.filter.star = true
+    ✓ DEBUG=folder/ or would be treated as file
+    ✓ DEBUG=folder/* does not qualify as *
+    ✓ DEBUG=folder/*#method is labeled as fn flag
+    ✓ DEBU=folder/*#method1#method2 to filter more than one
+
+  skipFile
+    ✓ * does not skip any files
+    ✓ folder/file.js skips any other file
+    ✓ folder/*/file.js is wilcard for only one folder deep
+    ✓ folder/*/file.js skips any other files
+    ✓ folder/**/file.js is wilcard for any one folder depth
+    ✓ folder/**/file.js skips any other files
+
+  14 passing (34ms)
 ```
 
 ## todo

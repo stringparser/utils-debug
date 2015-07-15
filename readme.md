@@ -66,17 +66,11 @@ fn2 (example.js:21:3)
 
 ## documentation
 
+The module exports a function factory that takes no arguments.
+
 ```js
 var Debug = require('utils-debug');
 ```
-
-The module exports a function factory.
-
-```js
-  function Debug(/* no arguments */)
-```
-It returns a noop (empty function) when no flags given (no `process.env.DEBUG`)
-or the file is not included on the `process.env.DEBUG` flag.
 
 _returns_
  - `noop` (empty function) if there was no `process.env.DEBUG`

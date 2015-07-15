@@ -30,7 +30,7 @@
     "v8-callsites": "*"
   },
   "scripts": {
-    "lint": "jshint lib test index.js --exclude node_modules",
+    "lint": "jshint lib *.js --exclude node_modules",
     "test": "npm run-script lint && mocha --reporter spec test/index.js"
   }
 }

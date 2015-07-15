@@ -78,13 +78,27 @@ The module exports a function factory.
 It returns a noop (empty function) when no flags given (no `process.env.DEBUG`)
 or the file is not included on the `process.env.DEBUG` flag.
 
+_returns_
+ - `noop` (empty function) if there was no `process.env.DEBUG`
+ - `noop` if the file did not pass the checks given by the flags
+ - `debug` function that uses the same format as `console.log`
+
+```js
+var Debug = require('utils-debug');
+var debug = Debug();
+
+debug('hey there'); fn();
+
+function fn(){
+  debug('%s', 'simple stuff');
+}
+```
+
 ### filters
 
-Filters are used to enable `debug` functions that live in your code. To be specific: `DEBUG` can contain any of the following patterns
+To enable `debug` functions that live in your code there are three types of filters.
 
-It will make any filename to match. At the moment the only wildcard implemented.
-
-_diretories/filenames paths separated by comma_
+#### paths separated by comma
 
 ```sh
 $ DEBUG=lib/dir/,lib/file1,lib/file2.js node program.js
@@ -95,23 +109,19 @@ a directory_.
 
 > NOTE: paths have to be relative to the [CWD](https://en.wikipedia.org/wiki/Working_directory#In_operating_systems)
 
-_function names starting with a pound sign_
+#### function names starting with a pound sign
 
 ```sh
 $ DEBUG=*#method1#method2 node program.js
 ```
-_wilcards_ available are:
+
+#### wilcards
+
  - `DEBUG=*` will match any file(s)
  - `DEBUG=folder/*/*` any file one dir deep after `folder`
  - `DEBUG=folder/*/file.js` matches any directory after `folder` 1 folder deep
  - `DEBUG=folder/**` any file after directory `folder` with any folder depth
  - `DEBUG=folder/**/file.js` any file after directory `folder` with any folder depth that ends up on `file.js`
-
-_returns_
- - `noop` (empty function) if there was no `process.env.DEBUG`
- - `noop` if the file did not pass the checks given by the flags
- - `debug` function that uses the same format as `console.log`
-
 
 ## why
 
